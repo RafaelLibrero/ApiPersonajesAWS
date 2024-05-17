@@ -1,6 +1,8 @@
 ﻿using ApiPersonajesAWS.Data;
 using ApiPersonajesAWS.Models;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
+using System.Data;
 
 namespace ApiPersonajesAWS.Repositories
 {
@@ -50,6 +52,17 @@ namespace ApiPersonajesAWS.Repositories
             };
             this.context.Personajes.Add(personaje);
             await this.context.SaveChangesAsync();
+        }
+
+        public async Task UpdatePersonajeAsync
+            (Personaje p)
+        {
+            string sql = "call updatePersonaje (@p_id, @p_nombre, @p_imagen)";
+            MySqlParameter pamId = new MySqlParameter("@p_id", p.IdPersonaje);
+            MySqlParameter pamNombre = new MySqlParameter("@p_nombre", p.Nombre);
+            MySqlParameter pamImagen = new MySqlParameter("@p_imagen", p.Imagen);
+
+            this.context.Database.ExecuteSqlRaw(sql, pamId, pamNombre, pamImagen);
         }
     }
 }
